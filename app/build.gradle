@@ -1,188 +1,49 @@
-//apply plugin: 'com.android.application'
-//android {
-//    compileSdkVersion 23
-//    buildToolsVersion "23.0.2"
-//    defaultConfig {
-//        applicationId "com.neza.myrobot"
-//        minSdkVersion 23
-//        targetSdkVersion 23
-//        versionCode 1
-//        versionName "1.0"
-//    }
-//    buildTypes {
-//        release {
-//            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//        }
-//    }
-//}
-//dependencies {
-//    compile fileTree(dir: 'libs', include: ['*.jar'])
-//    testCompile 'junit:junit:4.12'
-//    compile 'com.android.support:appcompat-v7:23.1.1'
-//    compile 'com.android.support:design:23.1.1'
-//}
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
-//        classpath 'com.android.tools.build:gradle-experimental:0.4.0'
-        //classpath 'com.android.tools.build:gradle:1.5.0'
-
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
 apply plugin: 'com.android.application'
-
-
-//android {
-//    compileSdkVersion 25
-//    buildToolsVersion "25.0.2"
-//
-//    defaultConfig {
-//        minSdkVersion 21
-//        targetSdkVersion 25
-//    }
-//}
-
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
-//        compileSdkVersion = 23
-//        buildToolsVersion = "23.0.2"
 
     defaultConfig {
+        applicationId "com.neza.myrobot"
         minSdkVersion 21
         targetSdkVersion 25
-    }
-}
-
-//sourceSets {
-//    main {
-//        jni.srcDirs = []
-//    }
-//}
-
-model {
-
-//        defaultConfig.with {
-//            applicationId = "com.neza.myrobot"
-////            minSdkVersion 21
-////            targetSdkVersion 25
-//////            minSdkVersion.apiLevel = 23
-//////            targetSdkVersion.apiLevel = 23
-////            versionCode = 1
-////            versionName = "1.0"
-////
-////        }
-//    }
-
-    android.ndk {
-        moduleName = "myrobot"
-        cppFlags.add("-Werror")
-        cppFlags.add("-std=c++11") // Add provisions to allow C++11 functionality
-        cppFlags.add("-fexceptions")
-
-        //CFlags.add("-I${file("-std=c11 -I${project.buildDir}/../OpenCV-3.1.0-android-sdk/OpenCV-android-sdk/sdk/native/jni/include")}".toString())
-//        cppFlags += "-I${file("src/native2/jni/include")}".toString()
-        cppFlags.add("-I${file("src/main/jni/native/jni/include")}".toString())
-        CFlags.add("-I${file("src/main/jni/native/jni/include")}".toString())
-
-//        cppFlags.add("-I${file("c:\\sang\\android\\OpenCV-3.1.0-android-sdk\\OpenCV-android-sdk\\sdk\\native\\jni\\include")}".toString())
-//        CFlags.add("-I${file("c:\\sang\\android\\OpenCV-3.1.0-android-sdk\\OpenCV-android-sdk\\sdk\\native\\jni\\include")}".toString())
-
-//        cppFlags += "-I${file("-I${project.buildDir}/src/main/jni")}".toString()
-//        ldLibs.add("-L${file("src/main/jniLibs/armeabi-v7a")}".toString())
-//        ldLibs.addAll(["log", "GLESv2", "android", "dl", "z"])
-        ldLibs.addAll(["android", "EGL", "GLESv2", "dl", "log", "z"])
-//        stl = "c++_static"
-        stl = "gnustl_shared"
-    }
-
-    android.sources {
-            main {
-                java {
-                    source {
-                        srcDirs 'src/main/java'
-                    }
-                }
-                jni {
-                    source {
-                        srcDirs += ['src/main/jni']
-                    }
-                }
+        versionCode 1
+        versionName "1.0"
+        externalNativeBuild {
+            cmake {
+                cFlags "-Wno-write-strings -DUSE_OPENGL_ES_2_0"
+                cppFlags "-Werror -fexceptions -std=gnu++11 -DUSE_OPENGL_ES_2_0"
             }
         }
+        ndk {
+            abiFilters 'armeabi-v7a' //'arm64-v8a'
+        }
 
-    android.buildTypes {
+    }
+    buildTypes {
         release {
-            minifyEnabled = false
-            proguardFiles.add(file('proguard-rules.txt'))
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    android.productFlavors {
-        create("arm") {
-            ndk.with {
-                abiFilters.add("armeabi")
-
-                File curDir = file('./')
-                curDir = file(curDir.absolutePath)
-                String libsDir = curDir.absolutePath + "\\src\\main\\jniLibs\\armeabi\\"
-                ldLibs.add(libsDir + "libopencv_core.a")
-                ldLibs.add(libsDir + "libopencv_highgui.a")
-                ldLibs.add(libsDir + "libopencv_imgproc.a")
-                ldLibs.add(libsDir + "libopencv_java3.so")
-                ldLibs.add(libsDir + "libopencv_ml.a")
-
-            }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
         }
-        create("armv7") {
-            ndk.with {
-                abiFilters.add("armeabi-v7a")
-
-                File curDir = file('./')
-                curDir = file(curDir.absolutePath)
-                String libsDir = curDir.absolutePath + "\\src\\main\\jniLibs\\armeabi-v7a\\"
-
-                ldLibs.add(libsDir + "libopencv_core.a")
-                ldLibs.add(libsDir + "libopencv_highgui.a")
-                ldLibs.add(libsDir + "libopencv_imgproc.a")
-                ldLibs.add(libsDir + "libopencv_java3.so")
-                ldLibs.add(libsDir + "libopencv_ml.a")
-                ldLibs.add(libsDir + "libopencv_ts.a")
-            }
-        }
-//        create("arm8") {
-//            ndk.abiFilters.add("arm64-v8a")
-//        }
-//        create("x86-32") {
-//            ndk.abiFilters.add("x86")
-//        }
-        // for detailed abiFilter descriptions, refer to "Supported ABIs" @
-        // https://developer.android.com/ndk/guides/abis.html#sa
-
-        // build one including all cpu architectures
-//        create("all")
+    }
+    productFlavors {
     }
 }
 
 dependencies {
-//    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
 
-//    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:design:25.1.1'
 
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.android.support:support-v13:23.1.1'
-    compile 'com.android.support:gridlayout-v7:23.1.1'
-
+    compile 'com.android.support:support-v4:25.1.1'
+    compile 'com.android.support:support-v13:25.1.1'
+    compile 'com.android.support:gridlayout-v7:25.1.1'
     compile project(':openCVLibrary341')
 }

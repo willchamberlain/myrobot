@@ -446,11 +446,13 @@ public class NezaActivityFragment extends Fragment
         File fp = new File(file, "DemoFile2.dat");
 
         File[] fList = file.listFiles();
-        for (File f : fList) {
-            if (f.isFile()) {
-                Log.d(TAG, "bob file: "+ f.toString());
-            } else if (file.isDirectory()) {
-                Log.d(TAG, "bob dir: " + f.getAbsolutePath());
+        if (fList != null) {
+            for (File f : fList) {
+                if (f.isFile()) {
+                    Log.d(TAG, "bob file: " + f.toString());
+                } else if (file.isDirectory()) {
+                    Log.d(TAG, "bob dir: " + f.getAbsolutePath());
+                }
             }
         }
         mFileName = file.toString();

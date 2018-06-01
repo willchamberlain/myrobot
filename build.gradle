@@ -20,20 +20,6 @@ allprojects {
     }
 }
 
-//task clean(type: Delete) {
-//    delete rootProject.buildDir
-//}
-
-//dependencies {
-//    compile project(':openCVLibrary341')
-//}
-
-//android {
-//    compileSdkVersion 25
-//    buildToolsVersion "25.0.2"
-//
-//    defaultConfig {
-//        minSdkVersion 21
-//        targetSdkVersion 25
-//    }
-//}
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
